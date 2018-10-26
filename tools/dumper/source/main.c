@@ -100,6 +100,7 @@ static int traverse_dir(const char *dir, int recursive, void(*handler)(const cha
     struct dirent *entry;
     char name[1024];
 
+    dprintf("traverse_dir: %s\n", dir);
     dp = opendir(dir);
 	if (!dp) {
 		dprintf("Invalid directory.\n");
@@ -210,9 +211,12 @@ int _main(struct thread *td)
     dprintf("Starting dump...\n");
 
     /* Prepare kernel environment*/
-    syscall(11, init_ksdk);
+    syscall(11, init_ksdk);    
+    dprintf("init_ksdk: success...\n");
     syscall(11, kpatch_getroot);
+    dprintf("kpatch_getroot: success...\n");
     syscall(11, kpatch_enablemapself);
+    dprintf("kpatch_enablemapself: success...\n");
 
     /* Dump data */
     traverse_dir("/", true, decrypt_self_to_elf);
